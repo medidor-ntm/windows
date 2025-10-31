@@ -27,14 +27,12 @@ echo [1/9] Deletando instalador antigo (se existir)...
 del "%USERPROFILE%\Downloads\MedidorEducacaoConectada.exe" /f /q
 echo.
 
-:: 2- Desinstala o programa "Medidor Educação Conectada" pelo nome
-echo [2/9] Tentando desinstalar o programa "Medidor Educacao Conectada"...
-echo      (Isso pode demorar alguns minutos. Aguarde.)
-wmic product where "name='Medidor Educação Conectada'" call uninstall /nointeractive >nul 2>&1
-echo      Tentativa de desinstalacao via WMIC concluida.
-echo.
-echo      NOTA: Se o programa ainda aparecer, desinstale-o manualmente
-echo      pelo "Adicionar ou Remover Programas" antes de continuar.
+:: 2- Instala o provedor NuGet e desinstala o programa "Medidor Educação Conectada" (Metodo PowerShell)
+echo [2/9] Tentando desinstalar o programa "Medidor Educação Conectada" via PowerShell...
+echo      (Instalando/verificando provedor NuGet... Aguarde...)
+:: Este comando primeiro garante que o NuGet esta instalado e depois desinstala o pacote.
+powershell -ExecutionPolicy Bypass -NoProfile -Command "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.208 -Force -Scope CurrentUser > $null; Get-Package -Name 'Medidor Educacao Conectada' | Uninstall-Package -ErrorAction SilentlyContinue -Force"
+echo      Tentativa de desinstalacao via PowerShell concluida.
 echo.
 
 :: 3- Apaga a pasta "C:\Program Files\Nic.br" (se existir)
@@ -109,3 +107,4 @@ echo.
 echo Pressione qualquer tecla para fechar esta janela...
 pause >nul
 ENDLOCAL
+
